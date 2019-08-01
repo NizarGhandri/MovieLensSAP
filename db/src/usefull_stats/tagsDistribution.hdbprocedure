@@ -1,0 +1,30 @@
+-- only 15% of the movies have at least one or more tags and out of those 67% have only one tag
+-- Thus this is not a robust enough similarity measure for a recommendation engine. 
+
+
+PROCEDURE "MovieLens.db.usefull_stats::tagsDistribution"( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+-- number of movies with at least 1 or more tags. 
+select count(1)
+from (
+  select movieid, count(1) as tag_count
+  from "MovieLens.db.data::tags"
+  group by movieid
+);
+
+-- number of movies per number of tags.
+select tag_count, count(1)
+from (
+  select movieid, count(1) as tag_count
+  from "MovieLens.db.data::tags"
+  group by movieid
+)
+group by tag_count order by tag_count;
+END

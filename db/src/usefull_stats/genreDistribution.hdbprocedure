@@ -3,7 +3,7 @@
 suitable as similarity measure criteria */
 
 
-PROCEDURE "MovieLens.db.usefull_stats::nbrMovies_per_genre"()
+PROCEDURE "MovieLens.db.usefull_stats::genreDistribution"()
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    --DEFAULT SCHEMA <default_schema_name>
