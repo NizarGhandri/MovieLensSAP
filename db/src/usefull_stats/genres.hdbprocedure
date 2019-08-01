@@ -1,0 +1,31 @@
+-- Shows all distinct movie genres in an array and the number of movies associated to them
+-- Uses special string method from SQL Script: substr_before, substr_after
+PROCEDURE "MovieLens.db.usefull_stats::genres"()
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+  declare genrearray nvarchar(255) array;
+  declare tmp nvarchar(255);
+  declare idx integer;
+  declare sep nvarchar(1) := '|';
+  declare cursor cur for select distinct genres from "MovieLens.db.data::movies";
+  declare genres nvarchar (255) := '';
+  idx := 1;
+  for cur_row as cur() do
+     genres := cur_row.genres;
+    tmp := :genres;
+    while locate(:tmp,:sep) > 0 do
+      genrearray[:idx] := substr_before(:tmp,:sep);
+      tmp := substr_after(:tmp,:sep);
+      idx := :idx + 1;
+    end while;
+    genrearray[:idx] := :tmp;
+  end for;
+  genrelist = unnest(:genrearray) as (genre);
+  select genre, count(1) from :genrelist group by genre;
+END

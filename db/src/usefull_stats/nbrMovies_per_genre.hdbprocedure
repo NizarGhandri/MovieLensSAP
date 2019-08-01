@@ -1,0 +1,22 @@
+-- Shows number of movies that have only n genres. 
+/* We can see that there are a lot (almost a third) of movies that have only one genres thus making movie genres not 
+suitable as similarity measure criteria */
+
+
+PROCEDURE "MovieLens.db.usefull_stats::nbrMovies_per_genre"()
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   
+select genre_count, count(1)
+from (
+  select occurrences_regexpr('[|]' in genres) + 1 genre_count
+  from "MovieLens.db.data::movies"
+) group by genre_count order by genre_count;
+
+END

@@ -1,0 +1,25 @@
+PROCEDURE "MovieLens.db.usefull_stats::checks.hdbprocedure" ( 
+	OUT bijection INTEGER,
+	OUT genresComplete INTEGER
+)
+     LANGUAGE SQLSCRIPT 
+     SQL SECURITY INVOKER 
+     READS SQL DATA AS
+
+BEGIN
+/***************************** 
+  Write your procedure logic 
+*****************************/
+
+--checking for bijection between links table and movies table
+SELECT count(1) into bijection
+FROM "MovieLens.db.data::links" l FULL OUTER JOIN "MovieLens.db.data::movies" m ON (l.movieid = m.movieid)
+WHERE l.movieid IS NULL OR m.movieid IS NULL;
+
+--checking for movies with non existing genres
+SELECT count(1) into genresComplete
+FROM "MovieLens.db.data::movies" 
+WHERE genres IS NULL OR length(genres) = 0;
+
+
+END;
