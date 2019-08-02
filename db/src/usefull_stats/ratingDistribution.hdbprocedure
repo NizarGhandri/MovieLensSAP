@@ -1,0 +1,81 @@
+PROCEDURE "MovieLens.db.usefull_stats::ratingDistribution"( )
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+--DEFAULT SCHEMA <default_schema_name>
+READS SQL DATA AS
+BEGIN
+
+/**** RELATIONS BETWEEN RATINGS AND MOVIES ****/ 
+	--number of movies per rating count
+	select rating_count, count(1) as movie_count
+	from (
+	--number of ratings per movie; 
+		select movieid, count(1) as rating_count
+		from "MovieLens.db.data::ratings"
+		group by movieid
+	)
+	group by rating_count order by rating_count asc;
+	
+	-- these stats yield a medion of 89 an average of 100 and stdev of 70 (number of ratings per movie)
+	select distinct
+	min(rating_count) over( ) as min,
+	max(rating_count) over( ) as max,
+	avg(rating_count) over( ) as avg,
+	sum(rating_count) over( ) as sum,
+	median(rating_count) over( ) as median,
+	stddev(rating_count) over( ) as stddev,
+	count(*) over( ) as category_count
+	from (
+		select movieid, count(1) as rating_count
+		from "MovieLens.db.data::ratings"
+		group by movieid
+	)
+	group by rating_count;
+	
+/**** REALTIONS BETWEEN RATINGS AND USERS ****/
+
+	-- number of user of gave n raitng counts ( example 5 users gave 10 ratings)
+	select ratingcount, count(userid) as usercount 
+	from (
+		select userid, count(rating) as ratingcount
+		from "MovieLens.db.data::ratings"
+		group by userid
+	)
+	group by ratingcount; 
+	
+	select distinct
+	min(rating_count) over( ) as min,
+	max(rating_count) over( ) as max,
+	avg(rating_count) over( ) as avg,
+	sum(rating_count) over( ) as sum,
+	median(rating_count) over( ) as median,
+	stddev(rating_count) over( ) as stddev,
+	count(*) over( ) as category_count
+	from (
+		select userid, count(1) as rating_count
+		from "MovieLens.db.data::ratings"
+		group by userid
+	)
+	group by rating_count order by 1 desc;
+
+/**** RELATIONS BETWEEN RATINGS AND THEIR COUNT ****/
+
+	select rating, count(1) as rating_count
+	from "MovieLens.db.data::ratings"
+	group by rating order by 1 desc;
+	
+	
+	select rating,  count(1) as movie_count 
+	from (
+	  select movieid, rating, count(1) as rating_count
+	  from "MovieLens.db.data::ratings"
+	  group by movieid, rating
+	)
+	group by rating order by 1 desc;
+
+ 
+	
+
+
+
+END

@@ -9,7 +9,7 @@ PROCEDURE "MovieLens.db.usefull_stats::tagsDistribution"( )
    READS SQL DATA AS
 BEGIN
    /*************************************
-       Write your procedure logic 
+       Write your procedure logic
    *************************************/
 -- number of movies with at least 1 or more tags. 
 select count(1)

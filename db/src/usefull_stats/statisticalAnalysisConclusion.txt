@@ -1,0 +1,35 @@
+-------------Conclusion----------------
+Ratings seem to be the most robust distribution
+to build the recommendation engine: 
+Here are a few insights that you can gather based on the previous results:
+
+->The distribution for the rating count per movie is “better” spread compared to the rating count per user
+->At least a user has rated 2391 movies, and the top 10 users have rated more than 1000 movies each (look at megahubs)
+->3063 movies have a single rating (look at minimum support) 
+->Users are mostly rating movies they liked compared to the one they dislike
+->Only one third of the rating notations uses half star notations
+
+!!!!
+Using the rating count distribution per users results, 
+especially the average and median metric and the standard deviation, 
+you can assess that the distribution is skewed and that we have some outliers users 
+(remember the top 10 users rated more than 1000 movies each, when the average is 274, and the median is 174).
+We also need to care for the minimum support as minimum a substantial population of movies have only one rating.
+
+
+Definitions: 
+4 sigma rule: applying basic stats onto the dataset we can say that 4*stdev include 99.9% of the dataset 
+we thus consider as outliners nodes who have more than 4 times the stdev. 
+
+minimum support: (Internet definition) 
+Defines the number of links between a pair of items. For example, with transaction between users and products,
+if the minimum support to link a pair of product is 10, then we will need to find 10 users who bought both products
+to be able to create a link between products.
+
+megahub: 
+We consider a node to be a mega-hub when the number of links to other node is above a threshold. 
+Theses node are usually excluded from analysis as they can severely impact the quality of a model.
+
+For example if we try to analyze grocery receipts, you can agree that many customer will “buy” a plastic bags 
+(at least in France because we have a tendency to leave them in the car). But as an item it doesn’t make sense
+to use it as it will be linked to many users and therefore many other items.
